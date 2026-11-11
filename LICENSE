@@ -1,0 +1,19 @@
+Handheld Reference
+Copyright (c) 2024–2026 Zoltan Ban
+
+Firmware, simulator, and build tools: PolyForm Noncommercial License 1.0.0.
+License terms: https://polyformproject.org/licenses/noncommercial/1.0.0
+Canonical text: https://github.com/polyformproject/polyform-licenses/blob/1.0.0/PolyForm-Noncommercial-1.0.0.md
+
+Required Notice: Copyright (c) 2024–2026 Zoltan Ban (Handheld Reference)
+
+The enclosure designs and project documentation (including the images under
+docs/media/) are licensed under Creative Commons Attribution-NonCommercial-
+ShareAlike 4.0 International.
+License terms: https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+Suggested attribution: “Handheld Reference” by Zoltan Ban, CC BY-NC-SA 4.0.
+When sharing adaptations under that license, indicate what you changed and
+retain the attribution and license link.
+
+Third-party dependencies retain their own terms. See LICENSES/dependencies.md.
