@@ -31,3 +31,33 @@ Or run `ctest --test-dir simulator/build --output-on-failure` after a simulator-
 This edition was compiled for the rev 2 board and exercised in the simulator. It has not been flashed or tested on a physical board. The firmware leaves the board's charger disabled and does not implement the original power manager.
 
 The reference uses the ESP-IDF default single-app layout (partition table at `0x8000`, app at `0x10000`). Use a dedicated development board if you want to flash it. Check the installed partition table first; an app-only flash does not migrate the table, and a full flash can replace the existing layout. See the generated `build/flash_args` for this build's exact offsets.
+
+## Verify your extension
+
+Build the firmware and run the desktop checks after changing the shared
+interface. In the simulator, exercise the success and failure paths through
+the actual screen. The temperature sensor tutorial uses three fixtures
+for startup without a reading, a valid reading, and a failed read after
+success. Reopen the screen to check cached state and navigation.
+
+On the board, verify electrical connections and the response under
+representative load. For an I²C peripheral, check the address and device
+identity on the populated board and boot with the optional part absent.
+For sustained serial input, follow the [DMX bench procedure](dmx-rs485.md).
+
+## Reproduce the README screenshots
+
+The four GUI images come from the shared LVGL UI running in the SDL2
+simulator. The capture mode runs the smoke scenario and saves the rendered
+240 × 320 framebuffer for each page. From the repository root, with the
+simulator already built:
+
+```sh
+sim="$PWD/simulator/build/handheld-sim"
+capture_dir="$(mktemp -d)"
+(cd "$capture_dir" && SDL_VIDEODRIVER=dummy "$sim" --capture)
+```
+
+The output directory contains `settings.bmp`, `device.bmp`,
+`dev-menu.bmp`, and `dmx-monitor.bmp`. The README uses PNG conversions
+of those files at the same resolution.

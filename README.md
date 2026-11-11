@@ -1,6 +1,6 @@
 # Handheld Reference
 
-A keypad-driven ESP32-S3 handheld with a 240 × 320 display, local settings, a DMX512 monitor over RS‑485, and a printable enclosure. The same LVGL interface runs on the board and in an SDL2 simulator, so you can explore it without hardware.
+A keypad-driven ESP32-S3 handheld with a 240 × 320 display, local settings, a DMX512 monitor over RS‑485, and a printable enclosure. Use it as a starting point for a new peripheral, diagnostic tool, or handheld interface. The same LVGL interface runs on the board and in an SDL2 simulator, so you can develop screens and exercise failure states without hardware.
 
 <p>
   <img src="docs/media/settings.png" width="205" alt="System settings with Device, Dev Menu, and About">
@@ -9,13 +9,18 @@ A keypad-driven ESP32-S3 handheld with a 240 × 320 display, local settings, a D
   <img src="docs/media/dmx-monitor.png" width="205" alt="DMX monitor showing the first 16 slots from a synthetic 512-slot packet">
 </p>
 
-- **Device** controls the backlight and high contrast. The firmware stores the settings in NVS.
-- **Dev Menu** reports the last key, a press count, keypad availability, and the real-time clock.
-- **DMX monitor** shows all received slot values in banks of 16, with signal status and drop counts.
-- **About** shows the build target and firmware version.
-- **Enclosure** includes a FreeCAD model, neutral STEP solids, and individual STL exports.
+The demo includes persistent display settings, keypad and RTC diagnostics, and a receive-only DMX monitor. The [firmware architecture](docs/firmware-architecture.md) explains how board drivers, system features, and the shared UI fit together.
 
-This is the standalone reference edition of a working handheld project. Its focus is the display, physical input, serial diagnostics, and mechanical packaging. The original application, radio protocol, and animation playback are outside this edition.
+## Build on this firmware
+
+| I want to… | Start here |
+| --- | --- |
+| Understand where my change belongs | [Firmware architecture](docs/firmware-architecture.md) |
+| Add a peripheral and show its data | [Add an I²C temperature sensor](docs/add-i2c-sensor.md) |
+| Expose a feature to the GUI and simulate it | [System feature interface](docs/system-features.md) |
+| Add a screen that works on the keypad and desktop | [Extend the GUI](docs/extend-gui.md) |
+| Work on continuous serial input | [DMX over RS‑485](docs/dmx-rs485.md) |
+| Build and verify an extension | [Build and verification](docs/build-and-verification.md) |
 
 ## Run it on a desktop
 
@@ -40,17 +45,12 @@ With the ESP-IDF **5.3.1** environment active:
 
 The target is the rev 2 handheld board. See [build and verification](docs/build-and-verification.md) for the pinout, the headless simulator check, and the flash layout before trying the image on hardware.
 
-## Explore the design
+## Enclosure
+
+The [enclosure guide](enclosure/README.md) links to the FreeCAD solids, STEP model, and individual STL files. It also describes which parts to print first and what to check for fit.
 
 <img src="docs/media/enclosure-exploded.png" width="620" alt="Exploded CAD view of the handheld enclosure">
 
-| Topic | Start here |
-| --- | --- |
-| Display DMA, keyboard input, and persistent settings | [Firmware architecture](docs/firmware-architecture.md) |
-| UART buffering, DMX framing, and bench verification | [DMX over RS‑485](docs/dmx-rs485.md) |
-| What the simulator exercises and what still needs hardware | [Build and verification](docs/build-and-verification.md) |
-| CAD formats, part selection, and fit checks | [Enclosure guide](enclosure/README.md) |
-
 ## License
 
-Firmware and tools: [PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0). Enclosure and documentation: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). See [LICENSE](LICENSE) for scope and attribution.
+The firmware and tools use [PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0). The enclosure and documentation use [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). See [LICENSE](LICENSE) for scope and attribution.

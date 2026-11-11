@@ -1,18 +1,43 @@
 # Firmware architecture
 
-The reference has one UI and two platform adapters. It keeps the hardware details near the drivers while making it possible to test navigation on a desktop.
+The ESP32-S3 firmware and SDL2 simulator both compile the same LVGL screen and navigation code. Each target supplies its own input, display, and system feature implementations.
 
 ```text
-Rev 2 board                      Desktop
-KTS1622 keypad + PCF85063A RTC    SDL2 keys, pointer + sample clock
-              |                         |
-     main/app.c                 simulator/simulator.c
-              |                         |
-              +-- main/ui/handheld_ui.c-+
-                  LVGL objects and menu state
-              |                         |
-      ST7789 over i80 DMA        SDL2 RGB565 texture
+Rev 2 board                                     Desktop
+Keypad, RTC, UART2, NVS                         SDL2 keys, mock data, RAM
+         |                                                |
+     main/app.c                               simulator/simulator.c
+         |                                                |
+         +--------- handheld_ui.h interface --------------+
+                              |
+                       handheld_ui.c
+                      widgets and focus
+                              |
+                     LVGL display driver
+                       /                \
+              ST7789 over i80       SDL2 RGB565 texture
 ```
+
+| Change | Code that owns it |
+| --- | --- |
+| Board wiring and I²C device IDs | [board_description.h](../main/drivers/board_description.h) |
+| Bus setup, transport, and chip registers | [drivers](../main/drivers/) |
+| Portable packet assembly | [dmx_monitor.c](../main/dmx/dmx_monitor.c) |
+| Boot order, hardware sampling, and platform callbacks | [app.c](../main/app.c) |
+| UI data types, rendering, and navigation | [handheld_ui.h](../main/ui/handheld_ui.h) and [handheld_ui.c](../main/ui/handheld_ui.c) |
+| Desktop input and simulated features | [simulator.c](../simulator/simulator.c) |
+
+## Follow a keypad press and a DMX packet
+
+A keypad press travels through the KTS1622 expander to the polling loop in
+`app.c`. The loop detects a newly pressed bit and maps it to a logical key.
+It takes the LVGL lock before calling `handheld_ui_key()`. The desktop maps
+SDL key events to that same function. Focus and page changes happen in the UI.
+
+A DMX packet arrives in chunks from UART2. The receive task assembles it
+and publishes the latest snapshot to a queue. The DMX screen polls the
+snapshot from an LVGL timer while the screen is visible. The simulator feeds
+synthetic chunks through the same assembler.
 
 ## Display: one buffer and an asynchronous transfer
 
@@ -37,3 +62,10 @@ snapshot through a one-element queue. The UI refreshes eight times per second
 while the monitor is visible. The simulator generates UART events in software
 and uses the same assembler. See [DMX over RS‑485](dmx-rs485.md) for framing,
 recovery, and bench steps.
+
+## Extend this architecture
+
+Start with the [I²C sensor tutorial](add-i2c-sensor.md) to follow one feature
+through the board, platform interface, simulator, and GUI. The
+[system feature guide](system-features.md) covers API and task decisions.
+The [GUI guide](extend-gui.md) covers navigation and object lifetime.
