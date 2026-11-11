@@ -20,6 +20,7 @@ The demo includes persistent display settings, keypad and RTC diagnostics, and a
 | Expose a feature to the GUI and simulate it | [System feature interface](docs/system-features.md) |
 | Add a screen that works on the keypad and desktop | [Extend the GUI](docs/extend-gui.md) |
 | Work on continuous serial input | [DMX over RS‑485](docs/dmx-rs485.md) |
+| Trace firmware signals on the board | [Schematics and PCB renders](docs/build-and-verification.md#schematics-and-pcb-renders) |
 | Build and verify an extension | [Build and verification](docs/build-and-verification.md) |
 
 ## Run it on a desktop
@@ -45,7 +46,14 @@ With the ESP-IDF **5.3.1** environment active:
 
 The target is the rev 2 handheld board. See [build and verification](docs/build-and-verification.md) for the pinout, the headless simulator check, and the flash layout before trying the image on hardware.
 
-## Enclosure
+## Hardware and enclosure
+
+The [hardware reference](docs/build-and-verification.md#schematics-and-pcb-renders) includes vector schematic PDFs and PCB renders for the main board, keypad, and optional DMX prefilter.
+
+<p>
+  <img src="hardware/main-board-back.png" width="305" alt="Rear view of the assembled main PCB">
+  <img src="hardware/keypad-front.png" width="305" alt="Front view of the assembled keypad PCB">
+</p>
 
 The [enclosure guide](enclosure/README.md) links to the FreeCAD solids, STEP model, and individual STL files. It also describes which parts to print first and what to check for fit.
 
@@ -53,4 +61,4 @@ The [enclosure guide](enclosure/README.md) links to the FreeCAD solids, STEP mod
 
 ## License
 
-The firmware and tools use [PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0). The enclosure and documentation use [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). See [LICENSE](LICENSE) for scope and attribution.
+The firmware and tools use [PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0). The enclosure, hardware drawings and renders, and documentation use [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). See [LICENSE](LICENSE) for scope and attribution.

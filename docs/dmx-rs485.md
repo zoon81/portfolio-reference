@@ -43,6 +43,11 @@ break event. The first three slots read 32, 49, and 66. **Space** pauses and
 resumes the synthetic input, so you can check the transition to idle and back
 to receiving. The sample is generated locally from a fixed formula.
 
+The [main-board schematic](../hardware/main-board-schematic.pdf) shows
+the DMX connector on PDF page 3 and the RS-485 transceiver on page 5.
+The [DMX prefilter schematic](../hardware/dmx-prefilter-schematic.pdf)
+covers the separate accessory.
+
 ## Verify on the bench
 
 On a dedicated rev 2 development board running this reference build, connect

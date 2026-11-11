@@ -18,7 +18,9 @@ The reference keeps physical addresses and logical device IDs in
 in [wsr_iic.c](../main/drivers/wsr_iic.c) owns the ESP-IDF bus and device
 handles. Each registered device has its own address and clock setting.
 The existing wrappers use one shared transfer routine for writes, reads,
-and combined write/read transactions.
+and combined write/read transactions. To trace the physical bus, see the
+[main-board schematic](../hardware/main-board-schematic.pdf) and
+[keypad schematic](../hardware/keypad-schematic.pdf).
 
 1. In `board_description.h`, add `#define BOARD_TMP117_IIC_ADDRESS 0x48`
    and put `BOARD_IIC_NODE_TMP117,` immediately before
