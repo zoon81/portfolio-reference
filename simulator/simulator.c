@@ -71,6 +71,30 @@ static bool has_label(lv_disp_t *display, const char *text) {
     return false;
 }
 
+static struct dmx_monitor sample_dmx;
+static bool sample_signal = true;
+
+static enum dmx_status sample_dmx_read(struct dmx_snapshot *snapshot) {
+    *snapshot = sample_dmx.latest;
+    return dmx_snapshot_status(snapshot, SDL_GetTicks());
+}
+
+static void sample_dmx_send(uint32_t now) {
+    uint8_t frame[DMX_FRAME_BYTES] = {0};
+    for (unsigned i = 0; i < DMX_SLOTS; i++)
+        frame[i + 1] = (uint8_t)(i * 17 + 32);
+
+    // Model a complete UART packet whose last chunk arrives after the break.
+    const size_t chunk_size = 122;
+    size_t offset = 0;
+    while (sizeof(frame) - offset > chunk_size) {
+        dmx_on_data(&sample_dmx, frame + offset, chunk_size, false, now);
+        offset += chunk_size;
+    }
+    dmx_on_break(&sample_dmx, now);
+    dmx_on_data(&sample_dmx, frame + offset, sizeof(frame) - offset, true, now);
+}
+
 static int smoke(lv_disp_t *display, bool capture) {
 #define CHECK(cond)                                                                                \
     do {                                                                                           \
@@ -110,11 +134,27 @@ static int smoke(lv_disp_t *display, bool capture) {
     handheld_ui_status(false, "unavailable");
     CHECK(has_label(display, "Keypad: unavailable"));
     CHECK(has_label(display, "RTC: unavailable"));
+    handheld_ui_key(KEY_ENTER, "Enter");
+    CHECK(handheld_ui_page() == PAGE_DMX);
+    CHECK(has_label(display, "Receiving  |  512 slots"));
+    CHECK(has_label(display, "001:032"));
+    CHECK(snapshot(capture ? "dmx-monitor.bmp" : NULL));
+    handheld_ui_key(KEY_ENTER, "Enter");
+    CHECK(has_label(display, "017:048"));
+    handheld_ui_key(KEY_UP, "Up");
+    handheld_ui_key(KEY_ENTER, "Enter");
+    CHECK(has_label(display, "001:032"));
+    sample_dmx.latest.last_frame_ms = SDL_GetTicks() - 1000;
+    handheld_ui_key(KEY_ENTER, "Enter");
+    CHECK(has_label(display, "Signal idle  |  512 slots"));
+    CHECK(has_label(display, "497:016"));
+    handheld_ui_key(KEY_BACK, "Back");
+    CHECK(handheld_ui_page() == PAGE_DEV);
     handheld_ui_key(KEY_BACK, "Back");
     handheld_ui_key(KEY_DOWN, "Down");
     handheld_ui_key(KEY_ENTER, "Enter");
     CHECK(handheld_ui_page() == PAGE_ABOUT && has_label(display, "SDL2 simulator"));
-    puts("Settings, persistence callback, diagnostics, and About passed.");
+    puts("Settings, persistence callback, diagnostics, DMX monitor, and About passed.");
     return 0;
 #undef CHECK
 }
@@ -130,6 +170,13 @@ static void key(SDL_Keycode code) {
     case SDLK_RETURN:
     case SDLK_KP_ENTER:
         handheld_ui_key(KEY_ENTER, "Enter");
+        break;
+    case SDLK_SPACE:
+        if (handheld_ui_page() == PAGE_DMX) {
+            sample_signal = !sample_signal;
+            break;
+        }
+        handheld_ui_key(KEY_OTHER, "Space");
         break;
     case SDLK_ESCAPE:
     case SDLK_BACKSPACE:
@@ -185,9 +232,14 @@ int main(int argc, char **argv) {
         .target = "SDL2 simulator",
         .version = "0.1.0",
         .save = save_preferences,
+        .read_dmx = sample_dmx_read,
+        .dmx_source = "Simulated input / Space to pause",
     };
     handheld_ui_start(display, &platform, saved);
     handheld_ui_status(true, "12:34:56 (mock)");
+    dmx_on_break(&sample_dmx, SDL_GetTicks());
+    dmx_finish_break(&sample_dmx, SDL_GetTicks());
+    sample_dmx_send(SDL_GetTicks());
     if (automated) {
         result = smoke(display, capture);
         goto done;
@@ -195,6 +247,7 @@ int main(int argc, char **argv) {
 
     bool running = true;
     Uint32 tick = SDL_GetTicks();
+    Uint32 last_sample = tick;
     while (running && render_ok) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -206,6 +259,10 @@ int main(int argc, char **argv) {
                 key(event.key.keysym.sym);
         }
         const Uint32 now = SDL_GetTicks();
+        if (sample_signal && now - last_sample >= 25) {
+            sample_dmx_send(now);
+            last_sample = now;
+        }
         lv_tick_inc(now - tick);
         tick = now;
         lv_timer_handler();

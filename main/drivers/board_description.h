@@ -31,6 +31,7 @@
 #define BOARD_CC_CHR_EN_EXT_GPIO_0_PIN 2 // Charge Controller charge enable, active LOW
 #define BOARD_CC_CHR_PRESET_1_EXT_GPIO_0_PIN 3 // Charge Controller charge preset 1
 #define BOARD_CC_CHR_PRESET_2_EXT_GPIO_0_PIN 4 // Charge Controller charge preset 2
+#define BOARD_RS485_UART_RXD_NATIVE_GPIO_PIN 38
 #define BOARD_RS485_RX_EN_EXT_GPIO_1_PIN                                                           \
     4 // RS485 receiver enable, pulled high externally, active LOW
 #define BOARD_RS485_TX_EN_EXT_GPIO_1_PIN                                                           \

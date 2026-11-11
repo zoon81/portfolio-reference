@@ -19,11 +19,20 @@ add_library(lvgl STATIC ${lvgl_sources})
 target_include_directories(lvgl PUBLIC "${LVGL_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_definitions(lvgl PUBLIC LV_CONF_INCLUDE_SIMPLE)
 
+add_library(dmx_monitor STATIC ../main/dmx/dmx_monitor.c)
+target_include_directories(dmx_monitor PUBLIC ../main/dmx)
+target_compile_options(dmx_monitor PRIVATE -Wall -Wextra -Werror)
+
 add_executable(handheld-sim simulator.c ../main/ui/handheld_ui.c)
 target_include_directories(handheld-sim PRIVATE ../main/ui)
-target_link_libraries(handheld-sim PRIVATE lvgl SDL2::SDL2 m)
+target_link_libraries(handheld-sim PRIVATE lvgl dmx_monitor SDL2::SDL2 m)
 target_compile_options(handheld-sim PRIVATE -Wall -Wextra -Werror)
 
 enable_testing()
 add_test(NAME navigate_settings COMMAND handheld-sim --smoke)
 set_tests_properties(navigate_settings PROPERTIES ENVIRONMENT "SDL_VIDEODRIVER=dummy")
+
+add_executable(dmx_test dmx_test.c)
+target_link_libraries(dmx_test PRIVATE dmx_monitor)
+target_compile_options(dmx_test PRIVATE -Wall -Wextra -Werror)
+add_test(NAME dmx_frame_assembly COMMAND dmx_test)

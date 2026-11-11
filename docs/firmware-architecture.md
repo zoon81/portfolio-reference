@@ -29,3 +29,11 @@ The PCF85063A adapter reads the calendar registers in one I²C transaction, chec
 ## Preferences: one small NVS record
 
 Brightness is represented as 25, 50, 75, or 100 percent. The firmware packs it and the contrast flag into one 16-bit value under `handheld_ref/display`. The UI applies the new settings after the platform accepts the save. Invalid or missing values fall back to 75% and the default theme. An NVS initialization failure leaves the existing partition alone and runs with defaults. The simulator exercises the same UI save path using an in-memory record.
+
+## DMX diagnostics
+
+UART2 feeds a portable packet assembler. The firmware publishes its latest
+snapshot through a one-element queue. The UI refreshes eight times per second
+while the monitor is visible. The simulator generates UART events in software
+and uses the same assembler. See [DMX over RS‑485](dmx-rs485.md) for framing,
+recovery, and bench steps.

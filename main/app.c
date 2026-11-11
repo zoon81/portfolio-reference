@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "board_description.h"
+#include "dmx_uart.h"
 #include "driver/gpio.h"
 #include "esp_app_desc.h"
 #include "esp_log.h"
@@ -93,9 +94,12 @@ void app_main(void) {
     const bool keypad = kb_io_init();
     const bool rtc = wsr_rtc_init();
     lv_disp_t *display = wsr_lcd_init();
+    dmx_uart_start();
     static struct handheld_platform platform = {
         .target = "ESP32-S3 / Board rev 2",
         .save = save_preferences,
+        .read_dmx = dmx_uart_read,
+        .dmx_source = "UART2 / RS-485 input",
     };
     platform.version = esp_app_get_description()->version;
     if (wsr_lcd_lvgl_lock(-1)) {

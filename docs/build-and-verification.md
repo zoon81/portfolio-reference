@@ -14,6 +14,7 @@ The board wiring lives in [board_description.h](../main/drivers/board_descriptio
 | I²C bus | GPIO 17 (SDA), 18 (SCL) |
 | Keypad | I²C expander at 0x22 |
 | PCF85063A clock | I²C address 0x51 |
+| RS‑485 receive | UART2 RX on GPIO 38, receiver enable and transmitter disable on expander port 1 |
 
 ## Desktop smoke check
 
@@ -23,7 +24,7 @@ With SDL2 installed, run the same local checks from a clean checkout:
 ./scripts/check.sh
 ```
 
-Or run `ctest --test-dir simulator/build --output-on-failure` after a simulator-only build. The test navigates the actual shared LVGL UI, cycles brightness, toggles contrast, injects a failed save, and checks the diagnostics and About pages. The dummy SDL video driver lets it run without a window. It does not exercise the board's GPIO, LCD bus, NVS, or RTC.
+Or run `ctest --test-dir simulator/build --output-on-failure` after a simulator-only build. The test navigates the actual shared LVGL UI, cycles brightness, toggles contrast, injects a failed save, and checks the diagnostics, DMX slot navigation, and About pages. A second test exercises DMX frame assembly and recovery from a receive overrun. The dummy SDL video driver lets it run without a window. It does not exercise the board's GPIO, LCD bus, NVS, RTC, or electrical DMX timing.
 
 ## Hardware status
 

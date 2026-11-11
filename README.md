@@ -1,19 +1,21 @@
 # Handheld Reference
 
-A keypad-driven ESP32-S3 handheld with a 240 × 320 display, local settings, and a printable enclosure. The same LVGL interface runs on the board and in an SDL2 simulator, so you can explore it without hardware.
+A keypad-driven ESP32-S3 handheld with a 240 × 320 display, local settings, a DMX512 monitor over RS‑485, and a printable enclosure. The same LVGL interface runs on the board and in an SDL2 simulator, so you can explore it without hardware.
 
 <p>
   <img src="docs/media/settings.png" width="205" alt="System settings with Device, Dev Menu, and About">
   <img src="docs/media/device.png" width="205" alt="Device page with backlight and high contrast settings">
   <img src="docs/media/dev-menu.png" width="205" alt="Dev Menu showing keypad events and the simulated real-time clock">
+  <img src="docs/media/dmx-monitor.png" width="205" alt="DMX monitor showing the first 16 slots from a synthetic 512-slot packet">
 </p>
 
 - **Device** controls the backlight and high contrast. The firmware stores the settings in NVS.
 - **Dev Menu** reports the last key, a press count, keypad availability, and the real-time clock.
+- **DMX monitor** shows all received slot values in banks of 16, with signal status and drop counts.
 - **About** shows the build target and firmware version.
 - **Enclosure** includes a FreeCAD model, neutral STEP solids, and individual STL exports.
 
-This is the standalone reference edition of a working handheld project. Its focus is the display, physical input, and mechanical packaging. The original application, radio protocol, and animation playback are outside this edition.
+This is the standalone reference edition of a working handheld project. Its focus is the display, physical input, serial diagnostics, and mechanical packaging. The original application, radio protocol, and animation playback are outside this edition.
 
 ## Run it on a desktop
 
@@ -26,7 +28,7 @@ cmake --build simulator/build --parallel
 ./simulator/build/handheld-sim
 ```
 
-Use **↑ / ↓**, **Enter**, and **Esc**, or click a row. The simulator uses a sample clock and keeps display settings for the current session.
+Use **↑ / ↓**, **Enter**, and **Esc**, or click a row. The simulator uses a sample clock and keeps display settings for the current session. Open **Dev Menu → DMX monitor** to inspect a synthetic signal. Press **Space** on that page to pause or resume the input.
 
 ## Build the firmware
 
@@ -45,6 +47,7 @@ The target is the rev 2 handheld board. See [build and verification](docs/build-
 | Topic | Start here |
 | --- | --- |
 | Display DMA, keyboard input, and persistent settings | [Firmware architecture](docs/firmware-architecture.md) |
+| UART buffering, DMX framing, and bench verification | [DMX over RS‑485](docs/dmx-rs485.md) |
 | What the simulator exercises and what still needs hardware | [Build and verification](docs/build-and-verification.md) |
 | CAD formats, part selection, and fit checks | [Enclosure guide](enclosure/README.md) |
 

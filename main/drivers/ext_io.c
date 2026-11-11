@@ -45,13 +45,15 @@ bool ext_io_init(void) {
 
     // Preload output levels before changing pin directions.
     const uint8_t p0 = (1u << BOARD_CC_CHR_EN_EXT_GPIO_0_PIN);
-    const uint8_t p1 = (1u << BOARD_LCD_RST_EXT_GPIO_1_PIN) | (1u << BOARD_LCD_RDX_EXT_GPIO_1_PIN);
+    const uint8_t p1 = (1u << BOARD_LCD_RST_EXT_GPIO_1_PIN) | (1u << BOARD_LCD_RDX_EXT_GPIO_1_PIN) |
+                       (1u << BOARD_RS485_RX_EN_EXT_GPIO_1_PIN);
+    const uint8_t p1_outputs = p1 | (1u << BOARD_RS485_TX_EN_EXT_GPIO_1_PIN);
     return kts1622_write_port_value(&ext_io_dev_hnd, KTS1622_PORT_0, p0) &&
            kts1622_write_port_value(&ext_io_dev_hnd, KTS1622_PORT_1, p1) &&
            kts1622_write_port_direction(&ext_io_dev_hnd, KTS1622_PORT_0,
                                         (uint8_t)~((1u << BOARD_CC_CHR_EN_EXT_GPIO_0_PIN) |
                                                    (1u << BOARD_KB_IO_3_EXT_GPIO_0_PIN))) &&
-           kts1622_write_port_direction(&ext_io_dev_hnd, KTS1622_PORT_1, (uint8_t)~p1);
+           kts1622_write_port_direction(&ext_io_dev_hnd, KTS1622_PORT_1, (uint8_t)~p1_outputs);
 }
 
 bool ext_io_LCD_RST_set(void) {
@@ -62,4 +64,10 @@ bool ext_io_LCD_RST_set(void) {
 bool ext_io_LCD_RST_clr(void) {
     return kts1622_set_port_pin_value(&ext_io_dev_hnd, KTS1622_PORT_1, BOARD_LCD_RST_EXT_GPIO_1_PIN,
                                       true);
+}
+
+bool ext_io_rs485_receive_enable(void) {
+    // TX enable is preloaded low at startup and stays low.
+    return kts1622_set_port_pin_value(&ext_io_dev_hnd, KTS1622_PORT_1,
+                                      BOARD_RS485_RX_EN_EXT_GPIO_1_PIN, false);
 }

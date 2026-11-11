@@ -1,9 +1,10 @@
 #pragma once
 
+#include "dmx_monitor.h"
 #include "lvgl.h"
 
 enum handheld_key { KEY_UP, KEY_DOWN, KEY_ENTER, KEY_BACK, KEY_OTHER };
-enum handheld_page { PAGE_SETTINGS, PAGE_DEVICE, PAGE_DEV, PAGE_ABOUT };
+enum handheld_page { PAGE_SETTINGS, PAGE_DEVICE, PAGE_DEV, PAGE_ABOUT, PAGE_DMX };
 
 struct handheld_preferences {
     uint8_t brightness;
@@ -15,6 +16,8 @@ struct handheld_platform {
     const char *version;
     // Return false if the requested settings could not be stored.
     bool (*save)(struct handheld_preferences prefs);
+    enum dmx_status (*read_dmx)(struct dmx_snapshot *snapshot);
+    const char *dmx_source;
 };
 
 void handheld_ui_start(lv_disp_t *display, const struct handheld_platform *platform,
