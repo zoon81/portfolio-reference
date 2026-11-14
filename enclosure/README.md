@@ -10,7 +10,7 @@ The enclosure packages a 240 × 320 LCD above a separate keypad, with a removabl
 
 The FreeCAD document contains separate editable solids without the original feature history. The STEP file preserves solid geometry. The STL files use CAD coordinates, so drop each mesh to the build plate and choose orientation in your slicer. The model is a parts collection; it has no assembly constraints.
 
-![Exploded view of selected enclosure parts](../docs/media/enclosure-exploded.png)
+![Exploded view of selected enclosure parts](../assets/cad/enclosure-exploded.png)
 
 ## Parts and fit
 

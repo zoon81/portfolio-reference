@@ -1,31 +1,29 @@
 # Handheld Reference
 
-A keypad-driven ESP32-S3 handheld with a 240 × 320 display, local settings, a DMX512 monitor over RS‑485, and a printable enclosure. Use it as a starting point for a new peripheral, diagnostic tool, or handheld interface. The same LVGL interface runs on the board and in an SDL2 simulator, so you can develop screens and exercise failure states without hardware.
+An ESP32-S3 handheld with a physical keypad, a 240 × 320 display, and an RS-485 port for monitoring DMX512. Explore the same LVGL interface on the device or in the SDL2 simulator, then use the firmware as a starting point for your own peripherals and screens.
 
-<p>
-  <img src="docs/media/settings.png" width="205" alt="System settings with Device, Dev Menu, and About">
-  <img src="docs/media/device.png" width="205" alt="Device page with backlight and high contrast settings">
-  <img src="docs/media/dev-menu.png" width="205" alt="Dev Menu showing keypad events and the simulated real-time clock">
-  <img src="docs/media/dmx-monitor.png" width="205" alt="DMX monitor showing the first 16 slots from a synthetic 512-slot packet">
+<p align="center">
+  <img src="assets/cad/enclosure-exploded.png" width="720" alt="Exploded CAD view of the handheld chassis, bezels, keypad aligner, rear cover, and battery cradle">
 </p>
 
-The demo includes persistent display settings, keypad and RTC diagnostics, and a receive-only DMX monitor. The [firmware architecture](docs/firmware-architecture.md) explains how board drivers, system features, and the shared UI fit together.
+[Run the simulator](#run-it-on-a-desktop) · [Build on the firmware](#build-on-this-firmware) · [Explore the hardware](#hardware-and-enclosure)
 
-## Build on this firmware
+## Explore the interface
 
-| I want to… | Start here |
-| --- | --- |
-| Understand where my change belongs | [Firmware architecture](docs/firmware-architecture.md) |
-| Add a peripheral and show its data | [Add an I²C temperature sensor](docs/add-i2c-sensor.md) |
-| Expose a feature to the GUI and simulate it | [System feature interface](docs/system-features.md) |
-| Add a screen that works on the keypad and desktop | [Extend the GUI](docs/extend-gui.md) |
-| Work on continuous serial input | [DMX over RS‑485](docs/dmx-rs485.md) |
-| Trace firmware signals on the board | [Schematics and PCB renders](docs/build-and-verification.md#schematics-and-pcb-renders) |
-| Build and verify an extension | [Build and verification](docs/build-and-verification.md) |
+<p>
+  <img src="assets/simulator/settings.png" width="160" alt="System settings with Device, Dev Menu, and About">
+  <img src="assets/simulator/device.png" width="160" alt="Device settings with backlight and high contrast controls">
+  <img src="assets/simulator/dev-menu.png" width="160" alt="Keypad and RTC diagnostics in Dev Menu">
+  <img src="assets/simulator/dmx-monitor.png" width="160" alt="Receive-only DMX monitor displaying slot values from a synthetic packet">
+</p>
+
+*Screens captured from the SDL2 simulator. The simulator supplies a sample clock and synthetic DMX traffic.*
+
+The demo includes persistent display settings, keypad and RTC diagnostics, and a receive-only DMX monitor that displays frame counts and up to 512 slot values.
 
 ## Run it on a desktop
 
-Install CMake, a C compiler, SDL2 2.0.18 or later, and LVGL 8.3.11. A firmware build fetches LVGL automatically. For a simulator-only setup, point CMake at a separate LVGL 8.3.11 checkout:
+Install CMake, a C compiler, and SDL2 2.0.18 or later. The simulator uses LVGL 8.3.11. Use the commands below to fetch it, or point CMake at the copy fetched by the firmware build.
 
 ```sh
 git clone --depth 1 --branch v8.3.11 https://github.com/lvgl/lvgl.git ../lvgl-8.3.11
@@ -46,18 +44,27 @@ With the ESP-IDF **5.3.1** environment active:
 
 The target is the rev 2 handheld board. See [build and verification](docs/build-and-verification.md) for the pinout, the headless simulator check, and the flash layout before trying the image on hardware.
 
+## Build on this firmware
+
+| To do this | Start here |
+| --- | --- |
+| See how board drivers, feature logic, and the UI fit together | [Firmware architecture](docs/firmware-architecture.md) |
+| Add a peripheral and show its data | [Add an I²C temperature sensor](docs/add-i2c-sensor.md) |
+| Expose a feature to the GUI and simulate it | [System feature interface](docs/system-features.md) |
+| Add a keypad and desktop screen | [Extend the GUI](docs/extend-gui.md) |
+| Work on continuous serial input | [DMX over RS‑485](docs/dmx-rs485.md) |
+| Verify an extension in the simulator and on the bench | [Build and verification](docs/build-and-verification.md) |
+
 ## Hardware and enclosure
 
-The [hardware reference](docs/build-and-verification.md#schematics-and-pcb-renders) includes vector schematic PDFs and PCB renders for the main board, keypad, and optional DMX prefilter.
-
 <p>
-  <img src="hardware/main-board-back.png" width="305" alt="Rear view of the assembled main PCB">
-  <img src="hardware/keypad-front.png" width="305" alt="Front view of the assembled keypad PCB">
+  <a href="assets/pcb/main-board-back.png"><img src="assets/pcb/main-board-back.png" width="320" alt="KiCad render of the main PCB component side"></a>
+  <a href="assets/pcb/keypad-front.png"><img src="assets/pcb/keypad-front.png" width="320" alt="KiCad render of the keypad PCB button side"></a>
 </p>
 
-The [enclosure guide](enclosure/README.md) links to the FreeCAD solids, STEP model, and individual STL files. It also describes which parts to print first and what to check for fit.
+*KiCad renders of the main board and keypad.*
 
-<img src="docs/media/enclosure-exploded.png" width="620" alt="Exploded CAD view of the handheld enclosure">
+The [hardware reference](docs/build-and-verification.md#schematics-and-pcb-renders) includes schematic PDFs and PCB renders for the main board, keypad, and optional DMX prefilter. The [enclosure guide](enclosure/README.md) links to the FreeCAD solids, STEP model, and individual STL files.
 
 ## License
 

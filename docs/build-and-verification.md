@@ -20,9 +20,9 @@ The board wiring lives in [board_description.h](../main/drivers/board_descriptio
 
 | Board | Schematic PDF | PCB renders |
 | --- | --- | --- |
-| ESP32-S3 main board | [Main board](../hardware/main-board-schematic.pdf) | [Display side](../hardware/main-board-front.png) · [Component side](../hardware/main-board-back.png) |
-| I²C keypad | [Keypad](../hardware/keypad-schematic.pdf) | [Button side](../hardware/keypad-front.png) · [Connector side](../hardware/keypad-back.png) |
-| Optional DMX prefilter | [DMX prefilter](../hardware/dmx-prefilter-schematic.pdf) | [Assembled PCB](../hardware/dmx-prefilter.png) |
+| ESP32-S3 main board | [Main board](../hardware/main-board-schematic.pdf) | [Display side](../assets/pcb/main-board-front.png) · [Component side](../assets/pcb/main-board-back.png) |
+| I²C keypad | [Keypad](../hardware/keypad-schematic.pdf) | [Button side](../assets/pcb/keypad-front.png) · [Connector side](../assets/pcb/keypad-back.png) |
+| Optional DMX prefilter | [DMX prefilter](../hardware/dmx-prefilter-schematic.pdf) | [Assembled PCB](../assets/pcb/dmx-prefilter.png) |
 
 The main-board PDF shows the ESP32-S3 and LCD wiring on PDF page 1,
 power on page 2, external connectors on page 3, the I²C expander and RTC
